@@ -140,7 +140,7 @@ Please refer to the document [USENIX Security 2023 Artifact Evaluation](./docs/u
 
 To use this with the Brianna dataset, simply run the command below
 ```sh
-$ python3 briannaRun
+$ python3 briannaRun.py
 ```
 
 Output graphs will be saved to the `output/{filename}` directory, and the graphs stored within will be fed into Neo4J.
