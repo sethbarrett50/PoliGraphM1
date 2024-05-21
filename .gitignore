@@ -162,3 +162,13 @@ profile*.bin
 */extra-data/entity_info.json
 */extra-data/named_entity_recognition/
 */extra-data/purpose_classification/
+
+# Ignore all files in the poligrapher/extra-data directory
+poligrapher/extra-data/
+
+# Ignore all files in the output directory
+output/
+
+# Ignore all files in the PrivacyPoliciesDataset_Brianna directory
+PrivacyPoliciesDataset_Brianna/
+
