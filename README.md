@@ -1,6 +1,6 @@
 # PoliGraph: Automated Privacy Policy Analysis using Knowledge Graphs
 
-We propose PoliGraph, a framework to represent data collection statements in a privacy policy as a knowledge graph. We implemented an NLP-based tool, PoliGraph-er, to generate PoliGraphs and enable us to perform many analyses.
+PoliGraph is a framework made by UCI Networking Group. This is a fork of their work that is adapted to run on a M1 macbook to work with a dataset of Google Play Store Privacy Policy
 
 This repository hosts the source code for PoliGraph, including:
 
@@ -14,7 +14,7 @@ PoliGraph is part of [the Policy-Technology project](https://athinagroup.eng.uci
 
 ## Citation
 
-If you create a publication based on PoliGraph and/or its dataset, please cite the paper as follows:
+If you create a publication based on PoliGraph and/or its dataset, please cite the original paper as follows:
 
 ```bibtex
 @inproceedings{cui2023poligraph,
@@ -27,13 +27,10 @@ If you create a publication based on PoliGraph and/or its dataset, please cite t
 
 ## System Requirements
 
-We have tested all the code in this repository on a server with the following configuration:
-- CPU: Intel Xeon Silver 4316 (2 sockets x 20 cores x 2 threads)
-- Memory: 512 GiB
-- GPU: NVIDIA RTX A5000 (24 GiB of video memory)
-- OS: Debian GNU/Linux 11 (bullseye)
-
-A Linux server with 32 GiB of memory, 20 GiB of free disk space (after installing conda), and a similar NVIDIA GPU should suffice to run everything. A GPU is required to enable hardware acceleration for [transformer-based NLP models](https://spacy.io/usage/embeddings-transformers). Note that PoliGraph-er can run without a GPU, but the performance would be significantly lower.
+I am currently testing all the code in this repository on a M1 Macbook with the following configuration:
+- CPU: M1 Max
+- Memory: 64 GiB
+- OS: macOS Sonoma 14.6
 
 ## PoliGraph-er
 
@@ -41,15 +38,19 @@ PoliGraph-er is the NLP software used to generate PoliGraphs from the text of a 
 
 ### Installation
 
-PoliGraph-er is written in Python. We use conda to manage the Python dependencies. Please follow [this webpage](https://conda.io/projects/conda/en/latest/user-guide/install/linux.html) to download and install conda first.
+PoliGraph-er is written in Python. The original repo suggests using Conda, however this repo uses pip instead.
 
-After cloning this repository, change the working directory to the cloned directory.
-
-Create a new conda environment named `poligraph` with dependencies installed:
-
+Create a virtual environment using venv and activate it:
 ```sh
-$ conda env create -n poligraph -f environment.yml
-$ conda activate poligraph
+$ python3 -m venv venv
+$ source ./venv/bin/activate
+```
+
+After cloning this repository and creating a virtual environment, change the working directory to the cloned directory.
+
+Install the necessary pip packages using:
+```sh
+$ pip install -r requirements.txt
 ```
 
 Initialize the Playwright library (used by the crawler script):
@@ -63,6 +64,8 @@ Download `poligrapher-extra-data.tar.gz` from [here](https://drive.google.com/fi
 ```sh
 $ tar xf /path/to/poligrapher-extra-data.tar.gz -C poligrapher/extra-data
 ```
+
+Download the PrivacyPoliciesDataset_Brianna dataset from [here](example.html). Extract its content to `PrivacyPoliciesDataset_Brianna`.
 
 Install the PoliGraph-er (`poligrapher`) library:
 
@@ -126,12 +129,19 @@ $ python -m poligrapher.scripts.build_graph dataset/policy1 dataset/policy2 data
 
 If all the subdirectories under `dataset` contain valid crawled webpages, you may simply supply `dataset/*` to let the shell expand the arguments.
 
-## PoliGraph Dataset
-
-We released the privacy policy dataset used in our paper for reproducibility and other research usages. Please visit [the dataset page](https://athinagroup.eng.uci.edu/projects/auditing-and-policy-analysis/poligraph-dataset/) to request access to the dataset.
 
 ## Artifact Evaluation
 
 We will update the documentation under the `docs/` directory to explain the usage of other scripts.
 
-Please refer to the document [USENIX Security 2023 Artifact Evaluation](./docs/usenix-artifact-evaluation.md) and [Artifact Evaluation (Additional Experiments)](./docs/usenix-artifact-evaluation-additional.md) for instructions on reproducing the main results in our paper.
+Please refer to the document [USENIX Security 2023 Artifact Evaluation](./docs/usenix-artifact-evaluation.md) and [Artifact Evaluation (Additional Experiments)](./docs/usenix-artifact-evaluation-additional.md) for instructions on reproducing the main results in the original paper.
+
+## Usage with the Brianna Dataset
+
+To use this with the Brianna dataset, simply run the command below
+```sh
+$ python3 briannaRun
+```
+
+Output graphs will be saved to the `output/{filename}` directory, and the graphs stored within will be fed into Neo4J.
+

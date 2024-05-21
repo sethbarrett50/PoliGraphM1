@@ -131,7 +131,7 @@ def main():
         page.on("response", lambda r: url_status.update({r.url: r.status}))
         page.on("framenavigated", lambda f: f.parent_frame is None and navigated_urls.append(f.url))
 
-        page.goto(access_url)
+        page.goto(access_url, timeout=60000)
 
         try:
             page.wait_for_load_state("networkidle")

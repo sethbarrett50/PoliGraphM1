@@ -29,7 +29,8 @@ def main():
                         help="Max GPU usage to trigger manual cache cleaning")
     args = parser.parse_args()
 
-    use_gpu = spacy.prefer_gpu()
+    use_gpu = False # No GPU on M1
+    # use_gpu = spacy.prefer_gpu()
     nlp = setup_nlp_pipeline(args.nlp)
 
     for d in args.workdirs:
@@ -42,14 +43,14 @@ def main():
             with open(os.path.join(d, "document.txt"), "w", encoding="utf-8") as fout:
                 fout.write(document.print_tree())
 
-        if use_gpu:
-            current_device = torch.cuda.current_device()
-            gmem_total = torch.cuda.get_device_properties(current_device).total_memory
-            gmem_reserved = torch.cuda.memory_reserved(current_device)
+        # if use_gpu:
+        #     current_device = torch.cuda.current_device()
+        #     gmem_total = torch.cuda.get_device_properties(current_device).total_memory
+        #     gmem_reserved = torch.cuda.memory_reserved(current_device)
 
-            if gmem_reserved / gmem_total > args.gpu_memory_threshold:
-                logging.warning("Empty GPU cache...")
-                torch.cuda.empty_cache()
+        #     if gmem_reserved / gmem_total > args.gpu_memory_threshold:
+        #         logging.warning("Empty GPU cache...")
+        #         torch.cuda.empty_cache()
 
 
 if __name__ == "__main__":
