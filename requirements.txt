@@ -44,3 +44,5 @@ spacy-transformers
 torch 
 torchvision 
 torchaudio
+neo4j 
+py2neo
