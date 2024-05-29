@@ -39,7 +39,7 @@ for type in types:
                     else:
                          policy_url = second_line[len(prefix):]
                     filename_withoutExt = re.sub(r'\.[^\.]+$', '', filename)
-                    os.makedirs(f"output/{type}{filename_withoutExt}/", exist_ok=True)
+                    os.makedirs(f"output/{type}/{filename_withoutExt}/", exist_ok=True)
 
                     # Define the commands to run
                     commands = [
