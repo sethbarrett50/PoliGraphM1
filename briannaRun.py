@@ -1,7 +1,10 @@
 import os
 import re
 import subprocess
+
 from pathlib import Path
+
+
 
 # Define the directory containing the files
 directory = './PrivacyPoliciesDataset_Brianna/'
