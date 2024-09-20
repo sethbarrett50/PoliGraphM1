@@ -10,6 +10,9 @@ from urllib.parse import urlparse
 import networkx as nx
 import spacy
 import tldextract
+from gensim.models import Word2Vec
+import tldextract
+
 
 CRUNCHBASE_CATEGORY_MAPPING = {
     "Advertising": ["advertiser"],
@@ -52,6 +55,62 @@ TRACKER_RADAR_CATEGORY_MAPPING = {
 }
 
 
+def cache_skipgrams(entity_info, window_size=5, vector_size=100, workers=4, min_count=1):
+    """
+    Processes all entity names and domains using a skip-gram (Word2Vec) model to capture semantic relationships
+    in a vector space. This replaces the traditional n-gram approach with a more context-aware embedding.
+
+    Args:
+    - entity_info (dict): A dictionary with entity information, including domains and aliases.
+    - window_size (int): The maximum distance between the current and predicted word within a sentence.
+    - vector_size (int): Dimensionality of the feature vectors.
+    - workers (int): The number of worker threads to train the model.
+    - min_count (int): Ignores all words with total frequency lower than this.
+
+    Returns:
+    - Updates the entity_info dictionary with skip-gram vectors.
+    """
+    nlp = spacy.load("en_core_web_md", disable=["parser", "ner", "lemmatizer"])
+    all_texts = []
+
+    # Collect all entity names and domain names for training the skip-gram model
+    for entity, info in entity_info.items():
+        for alias in info["aliases"]:
+            all_texts.append(alias.lower())
+        for domain in info["domains"]:
+            extracted = tldextract.extract(domain)
+            domain_name = extracted.domain
+            all_texts.append(domain_name.lower())
+
+    # Tokenize texts and prepare training data for skip-gram
+    tokenized_texts = [list(doc) for doc in nlp.pipe(all_texts, batch_size=50)]
+
+    # Initialize and train a Word2Vec model in skip-gram mode (sg=1)
+    model = Word2Vec(sentences=tokenized_texts, vector_size=vector_size, window=window_size,
+                     min_count=min_count, workers=workers, sg=1)
+
+    # Store skip-gram vectors in entity_info
+    for entity, info in entity_info.items():
+        entity_vectors = {}
+        for alias in info["aliases"]:
+            # Use the mean of the vectors for each word in the alias
+            words = alias.lower().split()
+            vectors = [model.wv[word] for word in words if word in model.wv]
+            if vectors:
+                entity_vectors[alias] = sum(vectors) / len(vectors)
+        
+        for domain in info["domains"]:
+            extracted = tldextract.extract(domain)
+            domain_name = extracted.domain.lower()
+            if domain_name in model.wv:
+                entity_vectors[domain_name] = model.wv[domain_name]
+
+        # Add skip-gram vectors to the entity_info
+        info['skipgrams'] = entity_vectors
+
+
+# Depreciated
+'''
 def cache_ngrams(entity_info):
     # en_core_web_md supports is_oov
     nlp = spacy.load("en_core_web_md", disable=["parser", "ner", "lemmatizer"])
@@ -132,7 +191,7 @@ def cache_ngrams(entity_info):
     for entity, info in entity_info.items():
         if info["prevalence"] > 2e-5:
             entity_info[entity]["ngrams"][entity.lower()] = False
-
+'''
 
 def load_crunchbase_data(crunchbase_dir, tracker_radar_domain_mapping):
     # CrunchBase data
@@ -297,8 +356,13 @@ def main():
         info["aliases"].update(cb_company_info["aliases"])
         info["domains"].update(cb_company_info["domains"])
         info["categories"].update(cb_company_info["categories"])
+    
+    cache_skipgrams(entity_info)
 
+    # Depreciated
+    '''
     cache_ngrams(entity_info)
+    '''
 
     # Remove entities that causes a lot false detections
     entity_to_delete = ["Online", "Platform", "Answers", "Rokt"]

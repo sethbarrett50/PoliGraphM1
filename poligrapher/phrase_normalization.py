@@ -116,7 +116,11 @@ class EntityMatcher:
             entity_info = json.load(fin)
 
         self.entity_names = {}
+        # Depreciated
+        '''
         self.ngram_mapping = {}
+        '''
+        self.skipgram_mapping = {}
         self.domain_mapping = {}
 
         for entity, info in entity_info.items():
@@ -125,12 +129,21 @@ class EntityMatcher:
             for domain in info["domains"]:
                 self.domain_mapping[domain] = entity
 
+            for skipgram, oov_flag in info["skipgrams"].items():
+                self.skipgram_mapping_mapping[skipgram] = (entity, oov_flag)
+
+            # Depreciated
+            '''
             for ngram, oov_flag in info["ngrams"].items():
                 self.ngram_mapping[ngram] = (entity, oov_flag)
-
+            '''
+            
         self.keyword_matching_regex = regex.compile(
             r"\b(?:\L<keywords>)\b",
-            keywords=self.ngram_mapping.keys(),
+            keywords=self.skipgram_mapping.keys(),
+
+            # Depreciated
+            # keywords=self.ngram_mapping.keys(),
             flags=regex.IGNORECASE
         )
 
@@ -140,7 +153,12 @@ class EntityMatcher:
             return
 
         for m in self.keyword_matching_regex.finditer(name):
+            entity, oov_flag = self.skipgram_mapping[m[0].lower()]
+
+            # Depreciated
+            '''
             entity, oov_flag = self.ngram_mapping[m[0].lower()]
+            '''
 
             if oov_flag:
                 yield entity
