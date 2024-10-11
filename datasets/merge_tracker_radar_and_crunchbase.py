@@ -106,7 +106,7 @@ def cache_skipgrams(entity_info, window_size=5, vector_size=100, workers=4, min_
                 entity_vectors[domain_name] = model.wv[domain_name]
 
         # Add skip-gram vectors to the entity_info
-        info['skipgrams'] = entity_vectors
+        info["skipgrams"] = entity_vectors
 
 
 # Depreciated
@@ -384,49 +384,49 @@ def main():
         "domains": ["startappexchange.com", "startappservice.com"],
         "prevalence": 0.0,
         "categories": ["advertiser", "analytic provider"],
-        "ngrams": {"start.io": True, "startapp": True}
+        "skipgrams": {"start.io": True, "startapp": True}
     }
     entity_info["SessionM"] = {
         "aliases": [],
         "domains": ["sessionm.com"],
         "prevalence": 0.0,
         "categories": ["analytic provider"],
-        "ngrams": {"sessionm": True}
+        "skipgrams": {"sessionm": True}
     }
     entity_info["Kidoz"] = {
         "aliases": [],
         "domains": ["kidoz.net"],
         "prevalence": 0.0,
         "categories": ["advertiser"],
-        "ngrams": {"kidoz": True}
+        "skipgrams": {"kidoz": True}
     }
     entity_info["GreedyGame"] = {
         "aliases": [],
         "domains": ["greedygame.com"],
         "prevalence": 0.0,
         "categories": ["advertiser"],
-        "ngrams": {"greedygame": True}
+        "skipgrams": {"greedygame": True}
     }
     entity_info["SponsorPay"] = {
         "aliases": [],
         "domains": ["sponsorpay.com"],
         "prevalence": 0.0,
         "categories": ["advertiser"],
-        "ngrams": {"sponsorpay": True}
+        "skipgrams": {"sponsorpay": True}
     }
     entity_info["Cloudmobi"] = {
         "aliases": [],
         "domains": ["cloudmobi.net"],
         "prevalence": 0.0,
         "categories": ["advertiser"],
-        "ngrams": {"Cloudmobi": True}
+        "skipgrams": {"Cloudmobi": True}
     }
     entity_info["AppTornado"] = {
         "aliases": ["AppBrain"],
         "domains": ["appbrain.com", "apptornado.com"],
         "prevalence": 0.0,
         "categories": ["advertiser"],
-        "ngrams": {"appbrain": True, "apptornado": True}
+        "skipgrams": {"appbrain": True, "apptornado": True}
     }
     # Developers
     entity_info["Kaufcom"] = {
@@ -434,14 +434,14 @@ def main():
         "domains": ["maxpedia.com", "kauf.com"],
         "prevalence": 0.0,
         "categories": [],
-        "ngrams": {"kaufcom": True}
+        "skipgrams": {"kaufcom": True}
     }
     entity_info["GOMO"] = {
         "aliases": [],
         "domains": ["jiubang.com", "goforandroid.com", "gomo.com"],
         "prevalence": 0.0,
         "categories": [],
-        "ngrams": {"gomo": True, "jiubang": True}
+        "skipgrams": {"gomo": True, "jiubang": True}
     }
 
     with open(args.output, "w", encoding="utf-8") as fout:

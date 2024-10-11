@@ -130,7 +130,7 @@ class EntityMatcher:
                 self.domain_mapping[domain] = entity
 
             for skipgram, oov_flag in info["skipgrams"].items():
-                self.skipgram_mapping_mapping[skipgram] = (entity, oov_flag)
+                self.skipgram_mapping[skipgram] = (entity, oov_flag)
 
             # Depreciated
             '''

@@ -17,7 +17,7 @@ types = [
 
 # Loop thru both google play and websites
 for type in types:
-    os.makedirs(f'output/{type}', exist_ok=True)
+    os.makedirs(f'output/skipgram/{type}', exist_ok=True)
 
     # Loop through all files in the specified directory
     for filename in os.listdir(f'{directory}{type}'):
@@ -42,14 +42,14 @@ for type in types:
                     else:
                          policy_url = second_line[len(prefix):]
                     filename_withoutExt = re.sub(r'\.[^\.]+$', '', filename)
-                    os.makedirs(f"output/{type}/{filename_withoutExt}/", exist_ok=True)
+                    os.makedirs(f"output/skipgram/{type}/{filename_withoutExt}/", exist_ok=True)
 
                     # Define the commands to run
                     commands = [
-                        f"python -m poligrapher.scripts.html_crawler {policy_url} output/{type}{filename_withoutExt}/",
-                        f"python -m poligrapher.scripts.init_document output/{type}{filename_withoutExt}/",
-                        f"python -m poligrapher.scripts.run_annotators output/{type}{filename_withoutExt}/",
-                        f"python -m poligrapher.scripts.build_graph --pretty output/{type}{filename_withoutExt}/"
+                        f"python -m poligrapher.scripts.html_crawler {policy_url} output/skipgram/{type}{filename_withoutExt}/",
+                        f"python -m poligrapher.scripts.init_document output/skipgram/{type}{filename_withoutExt}/",
+                        f"python -m poligrapher.scripts.run_annotators output/skipgram/{type}{filename_withoutExt}/",
+                        f"python -m poligrapher.scripts.build_graph --pretty output/skipgram/{type}{filename_withoutExt}/"
                     ]
 
                     # Execute each command

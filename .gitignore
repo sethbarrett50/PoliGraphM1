@@ -172,3 +172,4 @@ output/
 # Ignore all files in the PrivacyPoliciesDataset_Brianna directory
 PrivacyPoliciesDataset_Brianna/
 
+.\*.tar.gz
